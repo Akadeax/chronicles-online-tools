@@ -1,0 +1,44 @@
+﻿<Window
+    x:Class="ChroniclesOnlineTools.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ChroniclesOnlineTools"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:ChroniclesOnlineTools.ViewModels"
+    xmlns:views="clr-namespace:ChroniclesOnlineTools.Views"
+    Title="Chronicles Online Tool Collection"
+    Width="800"
+    Height="600"
+    d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
+    Icon="/Resources/Icon.ico"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/MainStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="15,10">
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type viewModels:HomePageViewModel}">
+                <views:HomePageView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:ItemManagerViewModel}">
+                <views:ItemManagerView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:SkillTreeEditorViewModel}">
+                <views:SkillTreeEditorView />
+            </DataTemplate>
+        </Grid.Resources>
+
+        <Grid.DataContext>
+            <viewModels:MainViewModel />
+        </Grid.DataContext>
+
+        <ContentControl Content="{Binding CurrentViewModel}" />
+    </Grid>
+</Window>

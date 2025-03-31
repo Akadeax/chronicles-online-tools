@@ -1,0 +1,182 @@
+﻿<UserControl
+    x:Class="ChroniclesOnlineTools.Views.ItemManagerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:ChroniclesOnlineTools.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:editors="clr-namespace:ChroniclesOnlineTools.Views.ItemManager.Editors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:ChroniclesOnlineTools.Models"
+    xmlns:viewModels="clr-namespace:ChroniclesOnlineTools.ViewModels"
+    d:DataContext="{d:DesignInstance viewModels:ItemManagerViewModel}"
+    d:DesignHeight="600"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="130" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!--  Title Bar  -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="32"
+                Text="Item Manager" />
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="Set Resource Folder" />
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="Save Changes to File" />
+
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Text="Current Folder:" />
+
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Text="{Binding}" />
+            </Grid>
+        </Grid>
+
+        <!--  Item Tab  -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <!--  Item Select  -->
+            <TreeView Grid.Column="0">
+                <TreeView.Resources>
+                    <DataTemplate x:Key="KeyTreeItem" d:DataType="{x:Type models:ArmorSet}">
+                        <!--  d:DataType because this can also be used for other models with Name and ID  -->
+                        <StackPanel
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Text=" (" />
+                            <TextBlock Text="{Binding Id}" />
+                            <TextBlock Text=")" />
+                            <Button
+                                Width="20"
+                                Height="20"
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Center"
+                                Command="{Binding DataContext.ChangeItemToEditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}"
+                                Style="{DynamicResource IconButton}">
+                                <Image
+                                    Width="15"
+                                    Height="15"
+                                    Source="/Resources/Pen.png" />
+                            </Button>
+
+                        </StackPanel>
+                    </DataTemplate>
+                    <Style x:Key="KeyParentItem" TargetType="TreeViewItem">
+                        <Setter Property="Padding" Value="10,3" />
+                    </Style>
+                </TreeView.Resources>
+
+                <controls:TreeViewRootObjectHeader
+                    AssociatedType="{x:Type models:ArmorSet}"
+                    Header="Armor Sets"
+                    ItemTemplate="{StaticResource KeyTreeItem}"
+                    ItemsSource="{Binding ArmorSets}"
+                    Style="{StaticResource KeyParentItem}" />
+                <controls:TreeViewRootObjectHeader
+                    AssociatedType="{x:Type models:ArmorItem}"
+                    Header="Armor"
+                    ItemTemplate="{StaticResource KeyTreeItem}"
+                    ItemsSource="{Binding ArmorItems}"
+                    Style="{StaticResource KeyParentItem}" />
+                <controls:TreeViewRootObjectHeader
+                    AssociatedType="{x:Type models:WeaponItem}"
+                    Header="Weapons"
+                    ItemTemplate="{StaticResource KeyTreeItem}"
+                    ItemsSource="{Binding WeaponItems}"
+                    Style="{StaticResource KeyParentItem}" />
+            </TreeView>
+
+            <!--  Details View  -->
+            <Border
+                Grid.Column="1"
+                Margin="5,0,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderBrush="Black"
+                BorderThickness="1">
+                <Border.Resources>
+                    <DataTemplate DataType="{x:Type models:ArmorSet}">
+                        <editors:ArmorSetEditor />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type models:ArmorItem}">
+                        <TextBlock Text="{Binding Defence}" />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type models:WeaponItem}">
+                        <TextBlock Text="{Binding AttackPower}" />
+                    </DataTemplate>
+                </Border.Resources>
+                <ContentControl>
+                    <ContentControl.Content>
+                        <Binding Path="ItemToEdit">
+                            <Binding.TargetNullValue>
+                                <Grid>
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="Select an item to edit">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="LightGray" />
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                            </Binding.TargetNullValue>
+                        </Binding>
+                    </ContentControl.Content>
+                </ContentControl>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
