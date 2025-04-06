@@ -48,12 +48,14 @@
                     Grid.Column="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    Command="{Binding SetResourcesFolderCommand}"
                     Content="Set Resource Folder" />
                 <Button
                     Grid.Row="0"
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    Command="{Binding SaveChangesCommand}"
                     Content="Save Changes to File" />
 
                 <TextBlock
@@ -72,7 +74,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontSize="14"
-                    Text="{Binding}" />
+                    Text="{Binding ResourcesFolderPath}" />
             </Grid>
         </Grid>
 
@@ -87,16 +89,24 @@
             <TreeView Grid.Column="0">
                 <TreeView.Resources>
                     <DataTemplate x:Key="KeyTreeItem" d:DataType="{x:Type models:ArmorSet}">
-                        <!--  d:DataType because this can also be used for other models with Name and ID  -->
-                        <StackPanel
-                            Margin="5,0,0,0"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}" />
-                            <TextBlock Text=" (" />
-                            <TextBlock Text="{Binding Id}" />
-                            <TextBlock Text=")" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" SharedSizeGroup="GroupItem" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <!--  d:DataType because this can also be used for other models with Name and ID  -->
+                            <StackPanel
+                                Grid.Column="0"
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <TextBlock Text="{Binding Name}" />
+                                <TextBlock Text=" (" />
+                                <TextBlock Text="{Binding Id}" />
+                                <TextBlock Text=")" />
+                            </StackPanel>
                             <Button
+                                Grid.Column="1"
                                 Width="20"
                                 Height="20"
                                 Margin="5,0,0,0"
@@ -109,8 +119,7 @@
                                     Height="15"
                                     Source="/Resources/Pen.png" />
                             </Button>
-
-                        </StackPanel>
+                        </Grid>
                     </DataTemplate>
                     <Style x:Key="KeyParentItem" TargetType="TreeViewItem">
                         <Setter Property="Padding" Value="10,3" />
@@ -119,18 +128,21 @@
 
                 <controls:TreeViewRootObjectHeader
                     AssociatedType="{x:Type models:ArmorSet}"
+                    Grid.IsSharedSizeScope="True"
                     Header="Armor Sets"
                     ItemTemplate="{StaticResource KeyTreeItem}"
                     ItemsSource="{Binding ArmorSets}"
                     Style="{StaticResource KeyParentItem}" />
                 <controls:TreeViewRootObjectHeader
                     AssociatedType="{x:Type models:ArmorItem}"
+                    Grid.IsSharedSizeScope="True"
                     Header="Armor"
                     ItemTemplate="{StaticResource KeyTreeItem}"
                     ItemsSource="{Binding ArmorItems}"
                     Style="{StaticResource KeyParentItem}" />
                 <controls:TreeViewRootObjectHeader
                     AssociatedType="{x:Type models:WeaponItem}"
+                    Grid.IsSharedSizeScope="True"
                     Header="Weapons"
                     ItemTemplate="{StaticResource KeyTreeItem}"
                     ItemsSource="{Binding WeaponItems}"

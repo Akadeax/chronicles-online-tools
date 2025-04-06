@@ -40,7 +40,7 @@
         <TextBox
             Grid.Row="0"
             Grid.Column="1"
-            Text="{Binding Id}" />
+            Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock
             Grid.Row="1"
@@ -51,7 +51,7 @@
         <TextBox
             Grid.Row="1"
             Grid.Column="1"
-            Text="{Binding Name}" />
+            Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock
             Grid.Row="2"
@@ -64,7 +64,7 @@
             Grid.Column="1"
             Height="auto"
             AcceptsReturn="True"
-            Text="{Binding EffectDescription}"
+            Text="{Binding EffectDescription, UpdateSourceTrigger=PropertyChanged}"
             TextWrapping="Wrap" />
 
     </Grid>
